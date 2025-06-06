@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 const images = [
   { src: '/images/image1.jpg', alt: 'Dental Clinic Environment', hint: 'dental clinic' },
   { src: 'https://pixabay.com/photos/preventive-dentistry-dentistry-8858477', alt: 'Advanced Dental Equipment', hint: 'dental equipment' },
-  { src: 'https://placehold.co/1200x500.png', alt: 'Faculty and Students Interaction', hint: 'faculty students' },
+  { src: 'https://placehold.co/600x400/orange/white', alt: 'Faculty and Students Interaction', hint: 'faculty students' },
   { src: 'https://placehold.co/1200x500.png', alt: 'Patient Care Focus', hint: 'patient care' },
 ];
 
