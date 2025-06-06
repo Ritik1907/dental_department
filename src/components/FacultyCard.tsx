@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import type { FacultyMember } from '@/data/faculty';
@@ -11,7 +12,7 @@ interface FacultyCardProps {
 
 const FacultyCard = ({ member }: FacultyCardProps) => {
   return (
-    <Card className="flex flex-col overflow-hidden h-full transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 bg-card">
+    <Card className="flex flex-col overflow-hidden transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 bg-card">
       <CardHeader className="p-0">
         <div className="relative w-full h-56 sm:h-64"> {/* Adjusted height for better visuals */}
           <Image

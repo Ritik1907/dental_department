@@ -1,3 +1,4 @@
+
 import { facultyData } from '@/data/faculty';
 import FacultyProfile from '@/components/FacultyProfile';
 import { AnimatedDiv } from '@/components/AnimatedDiv';
@@ -7,6 +8,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import FooterYear from '@/components/FooterYear';
 
 export async function generateStaticParams() {
   return facultyData.map((member) => ({
@@ -56,7 +58,7 @@ const FacultyPage = ({ params }: FacultyPageProps) => {
         </main>
       </AnimatedDiv>
       <footer className="bg-card text-center py-8 mt-auto border-t border-border/50">
-        <p className="text-muted-foreground">&copy; {new Date().getFullYear()} Dental Faculty Showcase. All rights reserved.</p>
+        <p className="text-muted-foreground">&copy; <FooterYear /> Dental Faculty Showcase. All rights reserved.</p>
       </footer>
     </div>
   );
