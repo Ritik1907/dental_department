@@ -12,7 +12,7 @@ type AnimatedDivProps = {
 export const AnimatedDiv = ({ 
   children, 
   className, 
-  threshold = 0.1, 
+  threshold = 0.01, // Changed from 0.1 to 0.01
   triggerOnce = true,
 }: AnimatedDivProps) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -61,3 +61,4 @@ export const AnimatedDiv = ({
     </div>
   );
 };
+
