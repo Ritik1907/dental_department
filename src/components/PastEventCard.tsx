@@ -19,19 +19,22 @@ interface PastEventCardProps {
 
 const PastEventCard = ({ event }: PastEventCardProps) => {
   return (
-    <Card className="flex flex-col h-full overflow-hidden transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 bg-gradient-to-br from-card via-card to-secondary/10">
-      <CardHeader className="p-0">
-        <div className="relative w-full h-48 sm:h-56"> {/* Adjusted height for event images */}
+    <Card className="group flex flex-col md:flex-row overflow-hidden transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 bg-gradient-to-br from-card via-card to-secondary/10">
+      {/* Image Section */}
+      <div className="w-full md:w-auto md:flex-shrink-0 md:p-4 flex justify-center items-center">
+        <div className="relative w-full md:w-36 lg:w-44 aspect-[4/3] md:aspect-square overflow-hidden rounded-md md:rounded-lg shadow-sm">
           <Image
             src={event.imageUrl}
             alt={event.title}
             layout="fill"
             objectFit="cover"
-            className="transition-transform duration-300 group-hover:scale-105" // Removed group-hover for simplicity as there's no explicit group here
+            className="transition-transform duration-300 group-hover:scale-105"
             data-ai-hint={event.imageHint}
           />
         </div>
-      </CardHeader>
+      </div>
+
+      {/* Content Section */}
       <CardContent className="flex-grow p-5 flex flex-col">
         <CardTitle className="text-lg mb-1 font-headline text-primary">{event.title}</CardTitle>
         <div className="flex items-center text-xs text-muted-foreground mb-3">
