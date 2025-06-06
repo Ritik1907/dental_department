@@ -6,9 +6,10 @@ import { facultyData, type FacultyMember } from '@/data/faculty';
 import { AnimatedDiv } from '@/components/AnimatedDiv';
 import FooterYear from '@/components/FooterYear';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BellRing } from 'lucide-react';
+import { BellRing, Lightbulb } from 'lucide-react'; // Added Lightbulb icon
 import ScrollingNoticeBoard from '@/components/ScrollingNoticeBoard';
 import PastEventCard from '@/components/PastEventCard';
+import ResearchHighlightCard from '@/components/ResearchHighlightCard'; // New import
 
 // Define PastEvent interface and data
 interface PastEvent {
@@ -63,6 +64,52 @@ const pastEventsData: PastEvent[] = [
   }
 ];
 
+// Define ResearchHighlight interface and data
+export interface ResearchHighlight {
+  id: string;
+  title: string;
+  summary: string;
+  imageUrl: string;
+  imageHint: string;
+  principalInvestigator?: string;
+  link?: string; // Optional link for more details
+}
+
+const researchHighlightsData: ResearchHighlight[] = [
+  {
+    id: 'research1',
+    title: 'AI in Early Caries Detection',
+    summary: 'Developing advanced AI algorithms to improve the accuracy and speed of detecting early-stage dental caries from radiographic images.',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageHint: 'AI technology',
+    principalInvestigator: 'Dr. Alex Chen',
+  },
+  {
+    id: 'research2',
+    title: 'Novel Biomaterials for Bone Regeneration',
+    summary: 'Investigating new biocompatible materials that promote enhanced bone regeneration in periodontal and implant procedures.',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageHint: 'biomedical research',
+    principalInvestigator: 'Dr. Priya Sharma',
+  },
+  {
+    id: 'research3',
+    title: 'Salivary Diagnostics for Systemic Diseases',
+    summary: 'Exploring the potential of saliva as a non-invasive diagnostic tool for early detection of systemic diseases like diabetes and Sjögren\'s syndrome.',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageHint: 'lab research',
+    principalInvestigator: 'Dr. Ben Carter',
+  },
+  {
+    id: 'research4',
+    title: 'Impact of Microbiome on Oral Health',
+    summary: 'A comprehensive study on how variations in the oral microbiome influence susceptibility to common dental diseases and overall health.',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageHint: 'microscope science',
+    principalInvestigator: 'Dr. Lena Hanson & Dr. John Smith',
+  },
+];
+
 
 export default function HomePage() {
   const sortedFaculty = [...facultyData].sort((a, b) => {
@@ -82,27 +129,41 @@ export default function HomePage() {
     { id: 6, text: "Departmental meeting rescheduled to Friday, 3 PM in Conference Hall B."}
   ];
 
-  const facultyGridBaseDelay = 500; // Base delay for the first card in the faculty grid
-  const facultyCardStagger = 100; // Stagger delay for each subsequent faculty card
+  // Animation delay calculations
+  const carouselDelay = 100;
+  const welcomeCardDelay = carouselDelay + 200;
+  const noticeBoardDelay = welcomeCardDelay + 150; 
   
-  // Calculate the delay for the end of the faculty section animations
-  // This depends on the number of rows and columns in the grid
-  const numFaculty = sortedFaculty.length;
-  const numCols = 3; // Assuming up to 3 columns
-  const numRows = Math.ceil(numFaculty / numCols);
+  const facultyHeadingDelay = noticeBoardDelay + 300; 
+  const facultyGridBaseDelay = facultyHeadingDelay + 100;
+  const facultyCardStagger = 100;
+  
   let facultySectionEndDelay = facultyGridBaseDelay;
-  if (numRows > 0) {
-    // Delay of the last card in the first row
-    const lastCardInFirstRowDelay = facultyGridBaseDelay + (Math.min(numFaculty, numCols) - 1) * facultyCardStagger;
-    // Add delay for subsequent rows
-    facultySectionEndDelay = lastCardInFirstRowDelay + (numRows - 1) * facultyCardStagger;
-  } else {
-     facultySectionEndDelay = facultyGridBaseDelay; // if no faculty
+  if (sortedFaculty.length > 0) {
+    const numFacultyCols = 3; 
+    const numFacultyRows = Math.ceil(sortedFaculty.length / numFacultyCols);
+    // Delay of the last card in the first row (or only row)
+    const lastCardInFirstFacultyRowDelay = facultyGridBaseDelay + (Math.min(sortedFaculty.length, numFacultyCols) -1) * facultyCardStagger;
+    // Add delay for subsequent rows, if any
+    facultySectionEndDelay = lastCardInFirstFacultyRowDelay + (numFacultyRows > 1 ? (numFacultyRows -1) * facultyCardStagger : 0);
   }
-  
-  const pastEventsHeadingDelay = facultySectionEndDelay + 200; // Start past events heading after faculty cards
-  const pastEventsFirstCardDelay = pastEventsHeadingDelay + 100; // First past event card after heading
-  const pastEventCardStagger = 100; // Stagger for past event cards
+
+
+  const researchHeadingDelay = facultySectionEndDelay + 300; // Start after faculty cards fully animated (approx 700ms animation time)
+  const researchCardBaseDelay = researchHeadingDelay + 100;
+  const researchCardStagger = 100;
+
+  let researchSectionEndDelay = researchCardBaseDelay;
+  if (researchHighlightsData.length > 0) {
+    const numResearchCols = 2; // Assuming 2 columns for research highlights
+    const numResearchRows = Math.ceil(researchHighlightsData.length / numResearchCols);
+    const lastCardInFirstResearchRowDelay = researchCardBaseDelay + (Math.min(researchHighlightsData.length, numResearchCols) -1) * researchCardStagger;
+    researchSectionEndDelay = lastCardInFirstResearchRowDelay + (numResearchRows > 1 ? (numResearchRows -1) * researchCardStagger : 0);
+  }
+
+  const pastEventsHeadingDelay = researchSectionEndDelay + 300; 
+  const pastEventsFirstCardDelay = pastEventsHeadingDelay + 100;
+  const pastEventCardStagger = 100;
 
 
   return (
@@ -111,7 +172,7 @@ export default function HomePage() {
       <AnimatedDiv className="flex-grow">
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Image Carousel */}
-          <AnimatedDiv delay={100} className="mb-12 md:mb-20">
+          <AnimatedDiv delay={carouselDelay} className="mb-12 md:mb-20">
             <ImageCarousel />
           </AnimatedDiv>
 
@@ -120,7 +181,7 @@ export default function HomePage() {
             <div className="flex flex-col md:flex-row gap-8 md:gap-12">
               {/* Department Welcome Text (Left Column) */}
               <div className="md:w-2/3">
-                <AnimatedDiv delay={200} className="h-full">
+                <AnimatedDiv delay={welcomeCardDelay} className="h-full">
                   <Card className="h-full flex flex-col p-6 md:p-8 shadow-xl bg-card">
                     <CardHeader className="p-0 pb-4">
                       <CardTitle className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4 font-headline">
@@ -129,7 +190,7 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent className="p-0 flex-grow">
                       <p className="text-lg md:text-xl text-foreground/80 max-w-3xl">
-                        Welcome to the Department of Dental Sciences. We are committed to excellence in education, research, and patient care. Explore our faculty and their contributions to the field.
+                        Welcome to the Department of Dental Sciences, a center of excellence dedicated to advancing oral health through innovative education, pioneering research, and compassionate patient care. Our distinguished faculty are leaders in their respective fields, committed to mentoring the next generation of dental professionals and contributing to groundbreaking discoveries. Explore our website to learn more about our programs, our people, and our impact on the community and the world of dentistry.
                       </p>
                     </CardContent>
                   </Card>
@@ -138,7 +199,7 @@ export default function HomePage() {
 
               {/* Notice Board (Right Column) */}
               <div className="md:w-1/3">
-                <AnimatedDiv delay={350} className="h-full">
+                <AnimatedDiv delay={noticeBoardDelay} className="h-full">
                   <Card className="h-full flex flex-col bg-secondary/30 border-primary/20 shadow-xl">
                     <CardHeader className="pb-3 px-6 pt-6">
                       <CardTitle className="text-2xl text-primary font-headline flex items-center">
@@ -157,7 +218,7 @@ export default function HomePage() {
 
           {/* Faculty Listing Section */}
           <section id="faculty-section" className="scroll-mt-24 md:scroll-mt-28 mb-12 md:mb-16">
-            <AnimatedDiv delay={400}>
+            <AnimatedDiv delay={facultyHeadingDelay}>
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-12 text-primary font-headline">
                 Our Esteemed Faculty
               </h2>
@@ -169,6 +230,30 @@ export default function HomePage() {
                     <FacultyCard member={member} />
                   </AnimatedDiv>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Research Highlights Section */}
+          <section id="research-highlights-section" className="py-10 md:py-12 scroll-mt-24 md:scroll-mt-28 mb-12 md:mb-16">
+            <AnimatedDiv delay={researchHeadingDelay}>
+              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-12 text-primary font-headline flex items-center justify-center">
+                <Lightbulb className="mr-3 h-8 w-8" />
+                Pioneering Research & Innovation
+              </h2>
+            </AnimatedDiv>
+            <div className="max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {researchHighlightsData.map((research, index) => (
+                  <AnimatedDiv key={research.id} delay={researchCardBaseDelay + index * researchCardStagger}>
+                    <ResearchHighlightCard research={research} />
+                  </AnimatedDiv>
+                ))}
+                {researchHighlightsData.length === 0 && (
+                  <AnimatedDiv delay={researchCardBaseDelay}>
+                     <p className="text-center text-muted-foreground col-span-full">No research highlights to display at the moment.</p>
+                  </AnimatedDiv>
+               )}
               </div>
             </div>
           </section>
