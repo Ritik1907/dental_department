@@ -6,10 +6,10 @@ import { facultyData, type FacultyMember } from '@/data/faculty';
 import { AnimatedDiv } from '@/components/AnimatedDiv';
 import FooterYear from '@/components/FooterYear';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BellRing, Lightbulb } from 'lucide-react'; // Added Lightbulb icon
+import { BellRing, Lightbulb } from 'lucide-react';
 import ScrollingNoticeBoard from '@/components/ScrollingNoticeBoard';
 import PastEventCard from '@/components/PastEventCard';
-import ResearchHighlightCard from '@/components/ResearchHighlightCard'; // New import
+import ResearchHighlightCard from '@/components/ResearchHighlightCard';
 
 // Define PastEvent interface and data
 interface PastEvent {
@@ -129,50 +129,13 @@ export default function HomePage() {
     { id: 6, text: "Departmental meeting rescheduled to Friday, 3 PM in Conference Hall B."}
   ];
 
-  // Animation delay calculations
-  const carouselDelay = 100;
-  const welcomeCardDelay = carouselDelay + 200;
-  const noticeBoardDelay = welcomeCardDelay + 150; 
-  
-  const facultyHeadingDelay = noticeBoardDelay + 300; 
-  const facultyGridBaseDelay = facultyHeadingDelay + 100;
-  const facultyCardStagger = 100;
-  
-  let facultySectionEndDelay = facultyGridBaseDelay;
-  if (sortedFaculty.length > 0) {
-    const numFacultyCols = 3; 
-    const numFacultyRows = Math.ceil(sortedFaculty.length / numFacultyCols);
-    // Delay of the last card in the first row (or only row)
-    const lastCardInFirstFacultyRowDelay = facultyGridBaseDelay + (Math.min(sortedFaculty.length, numFacultyCols) -1) * facultyCardStagger;
-    // Add delay for subsequent rows, if any
-    facultySectionEndDelay = lastCardInFirstFacultyRowDelay + (numFacultyRows > 1 ? (numFacultyRows -1) * facultyCardStagger : 0);
-  }
-
-
-  const researchHeadingDelay = facultySectionEndDelay + 300; // Start after faculty cards fully animated (approx 700ms animation time)
-  const researchCardBaseDelay = researchHeadingDelay + 100;
-  const researchCardStagger = 100;
-
-  let researchSectionEndDelay = researchCardBaseDelay;
-  if (researchHighlightsData.length > 0) {
-    const numResearchCols = 2; // Assuming 2 columns for research highlights
-    const numResearchRows = Math.ceil(researchHighlightsData.length / numResearchCols);
-    const lastCardInFirstResearchRowDelay = researchCardBaseDelay + (Math.min(researchHighlightsData.length, numResearchCols) -1) * researchCardStagger;
-    researchSectionEndDelay = lastCardInFirstResearchRowDelay + (numResearchRows > 1 ? (numResearchRows -1) * researchCardStagger : 0);
-  }
-
-  const pastEventsHeadingDelay = researchSectionEndDelay + 300; 
-  const pastEventsFirstCardDelay = pastEventsHeadingDelay + 100;
-  const pastEventCardStagger = 100;
-
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <AnimatedDiv className="flex-grow">
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Image Carousel */}
-          <AnimatedDiv delay={carouselDelay} className="mb-12 md:mb-20">
+          <AnimatedDiv className="mb-12 md:mb-20">
             <ImageCarousel />
           </AnimatedDiv>
 
@@ -181,7 +144,7 @@ export default function HomePage() {
             <div className="flex flex-col md:flex-row gap-8 md:gap-12">
               {/* Department Welcome Text (Left Column) */}
               <div className="md:w-2/3">
-                <AnimatedDiv delay={welcomeCardDelay} className="h-full">
+                <AnimatedDiv className="h-full">
                   <Card className="h-full flex flex-col p-6 md:p-8 shadow-xl bg-card">
                     <CardHeader className="p-0 pb-4">
                       <CardTitle className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4 font-headline">
@@ -190,7 +153,7 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent className="p-0 flex-grow">
                       <p className="text-lg md:text-xl text-foreground/80 max-w-3xl">
-                        Welcome to the Department of Dental Sciences, a center of excellence dedicated to advancing oral health through innovative education, pioneering research, and compassionate patient care. Our distinguished faculty are leaders in their respective fields, committed to mentoring the next generation of dental professionals and contributing to groundbreaking discoveries. Explore our website to learn more about our programs, our people, and our impact on the community and the world of dentistry.
+                        Welcome to the Department of Dental Sciences, a center of excellence dedicated to advancing oral health through innovative education, pioneering research, and compassionate patient care. Our distinguished faculty are leaders in their respective fields, committed to mentoring the next generation of dental professionals and contributing to groundbreaking discoveries that shape the future of dentistry. We pride ourselves on fostering a collaborative environment where students and faculty work together to address critical oral health challenges. Explore our website to learn more about our comprehensive programs, state-of-the-art facilities, our accomplished people, and the profound impact we make on the community and the global landscape of dental medicine.
                       </p>
                     </CardContent>
                   </Card>
@@ -199,7 +162,7 @@ export default function HomePage() {
 
               {/* Notice Board (Right Column) */}
               <div className="md:w-1/3">
-                <AnimatedDiv delay={noticeBoardDelay} className="h-full">
+                <AnimatedDiv className="h-full">
                   <Card className="h-full flex flex-col bg-secondary/30 border-primary/20 shadow-xl">
                     <CardHeader className="pb-3 px-6 pt-6">
                       <CardTitle className="text-2xl text-primary font-headline flex items-center">
@@ -218,15 +181,15 @@ export default function HomePage() {
 
           {/* Faculty Listing Section */}
           <section id="faculty-section" className="scroll-mt-24 md:scroll-mt-28 mb-12 md:mb-16">
-            <AnimatedDiv delay={facultyHeadingDelay}>
+            <AnimatedDiv>
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-12 text-primary font-headline">
                 Our Esteemed Faculty
               </h2>
             </AnimatedDiv>
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {sortedFaculty.map((member, index) => (
-                  <AnimatedDiv key={member.id} delay={facultyGridBaseDelay + index * facultyCardStagger}>
+                {sortedFaculty.map((member) => (
+                  <AnimatedDiv key={member.id}>
                     <FacultyCard member={member} />
                   </AnimatedDiv>
                 ))}
@@ -236,7 +199,7 @@ export default function HomePage() {
 
           {/* Research Highlights Section */}
           <section id="research-highlights-section" className="py-10 md:py-12 scroll-mt-24 md:scroll-mt-28 mb-12 md:mb-16">
-            <AnimatedDiv delay={researchHeadingDelay}>
+            <AnimatedDiv>
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-12 text-primary font-headline flex items-center justify-center">
                 <Lightbulb className="mr-3 h-8 w-8" />
                 Pioneering Research & Innovation
@@ -244,13 +207,13 @@ export default function HomePage() {
             </AnimatedDiv>
             <div className="max-w-5xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {researchHighlightsData.map((research, index) => (
-                  <AnimatedDiv key={research.id} delay={researchCardBaseDelay + index * researchCardStagger}>
+                {researchHighlightsData.map((research) => (
+                  <AnimatedDiv key={research.id}>
                     <ResearchHighlightCard research={research} />
                   </AnimatedDiv>
                 ))}
                 {researchHighlightsData.length === 0 && (
-                  <AnimatedDiv delay={researchCardBaseDelay}>
+                  <AnimatedDiv>
                      <p className="text-center text-muted-foreground col-span-full">No research highlights to display at the moment.</p>
                   </AnimatedDiv>
                )}
@@ -260,19 +223,19 @@ export default function HomePage() {
 
           {/* Past Events Section - Vertical List */}
           <section id="past-events-section" className="py-10 md:py-12 scroll-mt-24 md:scroll-mt-28 mb-12 md:mb-16">
-            <AnimatedDiv delay={pastEventsHeadingDelay}>
+            <AnimatedDiv>
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-12 text-primary font-headline">
                 Highlights from Past Events
               </h2>
             </AnimatedDiv>
             <div className="max-w-2xl mx-auto space-y-8">
-              {pastEventsData.map((event, index) => (
-                <AnimatedDiv key={event.id} delay={pastEventsFirstCardDelay + index * pastEventCardStagger}>
+              {pastEventsData.map((event) => (
+                <AnimatedDiv key={event.id}>
                   <PastEventCard event={event} />
                 </AnimatedDiv>
               ))}
               {pastEventsData.length === 0 && (
-                 <AnimatedDiv delay={pastEventsFirstCardDelay}>
+                 <AnimatedDiv>
                     <p className="text-center text-muted-foreground">No past events to display at the moment.</p>
                  </AnimatedDiv>
               )}
