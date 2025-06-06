@@ -140,7 +140,7 @@ export default function HomePage() {
           </AnimatedDiv>
 
           {/* Department Landing & Notice Section */}
-          <section className="mb-12 md:mb-16 py-10 md:py-12">
+          <section className="mb-12 md:mb-16 py-8 md:py-10">
             <div className="flex flex-col md:flex-row gap-8 md:gap-12">
               {/* Department Welcome Text (Left Column) */}
               <div className="md:w-2/3">
