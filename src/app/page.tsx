@@ -8,10 +8,9 @@ import FooterYear from '@/components/FooterYear';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BellRing } from 'lucide-react';
 import ScrollingNoticeBoard from '@/components/ScrollingNoticeBoard';
-import HorizontalEventScroller from '@/components/HorizontalEventScroller'; // Added import
+import PastEventCard from '@/components/PastEventCard'; // Added import
 
 // Define PastEvent interface and data
-// This interface is also defined in HorizontalEventScroller.tsx
 // For a larger app, this would ideally be in a shared types file.
 interface PastEvent {
   id: string;
@@ -55,6 +54,14 @@ const pastEventsData: PastEvent[] = [
     imageHint: 'health screening',
     date: 'January 15, 2023',
   },
+  {
+    id: 'event5',
+    title: 'Continuing Dental Education Symposium',
+    description: 'A symposium featuring renowned speakers on various topics in modern dentistry, aimed at enhancing professional knowledge and skills.',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageHint: 'dental symposium',
+    date: 'November 10, 2022',
+  }
 ];
 
 
@@ -76,9 +83,13 @@ export default function HomePage() {
     { id: 6, text: "Departmental meeting rescheduled to Friday, 3 PM in Conference Hall B."}
   ];
 
-  const facultySectionEndDelay = 500 + (sortedFaculty.length > 0 ? (sortedFaculty.length - 1) * 100 : 0); // Estimate for grid
+  const facultyGridBaseDelay = 500;
+  const facultyCardStagger = 100;
+  const facultySectionEndDelay = facultyGridBaseDelay + (sortedFaculty.length > 0 ? (Math.ceil(sortedFaculty.length / 3) -1) * facultyCardStagger + ( (sortedFaculty.length % 3 || 3) -1) * facultyCardStagger : 0) ;
+  
   const pastEventsHeadingDelay = facultySectionEndDelay + 200;
-  const pastEventsScrollerDelay = pastEventsHeadingDelay + 100;
+  const pastEventsFirstCardDelay = pastEventsHeadingDelay + 100;
+  const pastEventCardStagger = 100;
 
 
   return (
@@ -141,7 +152,7 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {sortedFaculty.map((member, index) => (
-                  <AnimatedDiv key={member.id} delay={500 + index * 100}>
+                  <AnimatedDiv key={member.id} delay={facultyGridBaseDelay + index * facultyCardStagger}>
                     <FacultyCard member={member} />
                   </AnimatedDiv>
                 ))}
@@ -149,16 +160,25 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Past Events Section */}
+          {/* Past Events Section - Vertical List */}
           <section id="past-events-section" className="py-10 md:py-12 scroll-mt-24 md:scroll-mt-28 mb-12 md:mb-16">
             <AnimatedDiv delay={pastEventsHeadingDelay}>
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-12 text-primary font-headline">
                 Highlights from Past Events
               </h2>
             </AnimatedDiv>
-            <AnimatedDiv delay={pastEventsScrollerDelay}>
-              <HorizontalEventScroller events={pastEventsData} />
-            </AnimatedDiv>
+            <div className="max-w-2xl mx-auto space-y-8">
+              {pastEventsData.map((event, index) => (
+                <AnimatedDiv key={event.id} delay={pastEventsFirstCardDelay + index * pastEventCardStagger}>
+                  <PastEventCard event={event} />
+                </AnimatedDiv>
+              ))}
+              {pastEventsData.length === 0 && (
+                 <AnimatedDiv delay={pastEventsFirstCardDelay}>
+                    <p className="text-center text-muted-foreground">No past events to display at the moment.</p>
+                 </AnimatedDiv>
+              )}
+            </div>
           </section>
 
         </main>
