@@ -1,8 +1,11 @@
+
 import Image from 'next/image';
-import type { FacultyMember, Publication } from '@/data/faculty';
+import type { FacultyMember } from '@/data/faculty';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, MapPin, BookOpen, Brain, Award, Users, Link as LinkIcon } from 'lucide-react';
+import { Mail, Phone, MapPin, BookOpen, Brain, Award, Users } from 'lucide-react';
+import PublicationItem from './PublicationItem'; // Updated import
+import Link from 'next/link';
 
 interface FacultyProfileProps {
   member: FacultyMember;
@@ -31,23 +34,6 @@ const Section: React.FC<{ title: string; icon: React.ElementType; children: Reac
     {children}
   </section>
 );
-
-const PublicationItem: React.FC<{ pub: Publication }> = ({ pub }) => (
-  <li className="mb-2 pb-2 border-b border-border/50 last:border-b-0 last:pb-0 last:mb-0">
-    <p className="font-medium text-foreground/90">
-      {pub.link ? (
-        <a href={pub.link} target="_blank" rel="noopener noreferrer" className="hover:text-accent hover:underline flex items-center">
-          {pub.title} <LinkIcon className="ml-1 h-3 w-3" />
-        </a>
-      ) : (
-        pub.title
-      )}
-    </p>
-    {pub.journal && <p className="text-xs text-muted-foreground italic">In: {pub.journal}</p>}
-    {pub.year && <p className="text-xs text-muted-foreground">Year: {pub.year}</p>}
-  </li>
-);
-
 
 const FacultyProfile = ({ member }: FacultyProfileProps) => {
   return (
@@ -114,7 +100,7 @@ const FacultyProfile = ({ member }: FacultyProfileProps) => {
             
             <Section title="Selected Publications" icon={BookOpen}>
                {member.publications.length > 0 ? (
-                <ul className="space-y-2 text-foreground/85">
+                <ul className="space-y-1">
                   {member.publications.slice(0, 5).map((pub, index) => (
                     <PublicationItem key={index} pub={pub} />
                   ))}
@@ -123,8 +109,10 @@ const FacultyProfile = ({ member }: FacultyProfileProps) => {
                 <p className="text-muted-foreground">No publications listed.</p>
                )}
               {member.publications.length > 5 && (
-                <p className="mt-3 text-sm text-accent hover:underline">
-                  <Link href={`/faculty/${member.id}/publications`}>View all {member.publications.length} publications</Link>
+                <p className="mt-4 text-sm">
+                  <Link href={`/faculty/${member.id}/publications`} className="text-accent hover:underline font-medium">
+                    View all {member.publications.length} publications
+                  </Link>
                 </p>
               )}
             </Section>

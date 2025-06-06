@@ -8,10 +8,9 @@ import FooterYear from '@/components/FooterYear';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BellRing } from 'lucide-react';
 import ScrollingNoticeBoard from '@/components/ScrollingNoticeBoard';
-import PastEventCard from '@/components/PastEventCard'; // Added import
+import PastEventCard from '@/components/PastEventCard';
 
 // Define PastEvent interface and data
-// For a larger app, this would ideally be in a shared types file.
 interface PastEvent {
   id: string;
   title: string;
@@ -83,13 +82,27 @@ export default function HomePage() {
     { id: 6, text: "Departmental meeting rescheduled to Friday, 3 PM in Conference Hall B."}
   ];
 
-  const facultyGridBaseDelay = 500;
-  const facultyCardStagger = 100;
-  const facultySectionEndDelay = facultyGridBaseDelay + (sortedFaculty.length > 0 ? (Math.ceil(sortedFaculty.length / 3) -1) * facultyCardStagger + ( (sortedFaculty.length % 3 || 3) -1) * facultyCardStagger : 0) ;
+  const facultyGridBaseDelay = 500; // Base delay for the first card in the faculty grid
+  const facultyCardStagger = 100; // Stagger delay for each subsequent faculty card
   
-  const pastEventsHeadingDelay = facultySectionEndDelay + 200;
-  const pastEventsFirstCardDelay = pastEventsHeadingDelay + 100;
-  const pastEventCardStagger = 100;
+  // Calculate the delay for the end of the faculty section animations
+  // This depends on the number of rows and columns in the grid
+  const numFaculty = sortedFaculty.length;
+  const numCols = 3; // Assuming up to 3 columns
+  const numRows = Math.ceil(numFaculty / numCols);
+  let facultySectionEndDelay = facultyGridBaseDelay;
+  if (numRows > 0) {
+    // Delay of the last card in the first row
+    const lastCardInFirstRowDelay = facultyGridBaseDelay + (Math.min(numFaculty, numCols) - 1) * facultyCardStagger;
+    // Add delay for subsequent rows
+    facultySectionEndDelay = lastCardInFirstRowDelay + (numRows - 1) * facultyCardStagger;
+  } else {
+     facultySectionEndDelay = facultyGridBaseDelay; // if no faculty
+  }
+  
+  const pastEventsHeadingDelay = facultySectionEndDelay + 200; // Start past events heading after faculty cards
+  const pastEventsFirstCardDelay = pastEventsHeadingDelay + 100; // First past event card after heading
+  const pastEventCardStagger = 100; // Stagger for past event cards
 
 
   return (
@@ -107,14 +120,14 @@ export default function HomePage() {
             <div className="flex flex-col md:flex-row gap-8 md:gap-12">
               {/* Department Welcome Text (Left Column) */}
               <div className="md:w-2/3">
-                <AnimatedDiv delay={200}>
-                  <Card className="h-full p-6 md:p-8 shadow-xl bg-card">
+                <AnimatedDiv delay={200} className="h-full">
+                  <Card className="h-full flex flex-col p-6 md:p-8 shadow-xl bg-card">
                     <CardHeader className="p-0 pb-4">
                       <CardTitle className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4 font-headline">
                         Department of Dental Sciences
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-0">
+                    <CardContent className="p-0 flex-grow">
                       <p className="text-lg md:text-xl text-foreground/80 max-w-3xl">
                         Welcome to the Department of Dental Sciences. We are committed to excellence in education, research, and patient care. Explore our faculty and their contributions to the field.
                       </p>
@@ -125,15 +138,15 @@ export default function HomePage() {
 
               {/* Notice Board (Right Column) */}
               <div className="md:w-1/3">
-                <AnimatedDiv delay={350}>
-                  <Card className="h-full bg-secondary/30 border-primary/20 shadow-xl">
+                <AnimatedDiv delay={350} className="h-full">
+                  <Card className="h-full flex flex-col bg-secondary/30 border-primary/20 shadow-xl">
                     <CardHeader className="pb-3 px-6 pt-6">
                       <CardTitle className="text-2xl text-primary font-headline flex items-center">
                         <BellRing className="mr-2 h-6 w-6" />
                         Notice Board
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="px-6 pt-0 pb-6">
+                    <CardContent className="px-6 pt-0 pb-6 flex-grow">
                       <ScrollingNoticeBoard notices={notices} />
                     </CardContent>
                   </Card>
